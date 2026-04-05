@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Don't Take the Bait — Phishing Awareness Training</title>
+<title>Don’t Take the Bait — Phishing Awareness Training</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.9/babel.min.js"></script>
@@ -29,8 +29,8 @@ function getScenarios(userName, userEmail) {
       type: "email",
       typeLabel: "Email",
       isPhishing: true,
-      from: "security-alert@chasе.com",
-      fromNote: "Uses Cyrillic 'е' (U+0435) instead of Latin 'e' in 'chase'",
+      from: '<a href="security-alert@chase.com" data-real="chasebankalertsender.jp">security-alert@chase.com</a>',
+      fromNote: "Displayed as chase.com but actually sent from chasebankalertsender.jp",
       to: userEmail,
       subject: "⚠️ Unusual Sign-In Activity on Your Account",
       body: `Dear ${firstName},
@@ -39,7 +39,7 @@ We noticed a sign-in attempt to your Chase account from an unrecognized device i
 
 If this wasn't you, please secure your account immediately:
 
-<a href="https://chasе.com/account/secure-login" data-real="https://bit.ly/3xK9mTq">Verify Your Identity</a>
+<a href="https://chase.com/account/secure-login" data-real="https://bit.ly/3xK9mTq">Verify Your Identity</a>
 
 If you don't take action within 24 hours, we may need to temporarily restrict your account to prevent unauthorized access.
 
@@ -47,7 +47,7 @@ Sincerely,
 Chase Fraud Protection Team
 This is an automated message — please do not reply directly.`,
       clues: [
-        { label: "Cyrillic Character Spoofing", detail: "The sender domain looks like 'chase.com' but the letter 'e' in 'chasе' is actually a Cyrillic character (е, U+0435). This is called a homograph attack — the characters look identical to the human eye but register as a completely different domain." },
+        { label: "Spoofed Sender Address", detail: "The From field displays 'security-alert@chase.com' which looks completely legitimate. But hover over it to reveal the actual sending domain: 'chasebankalertsender.jp' — a Japanese country-code domain that has nothing to do with Chase. Attackers forge the display address to look trustworthy while sending from a completely different server." },
         { label: "Urgency & Fear", detail: "'If this wasn't you' combined with a 24-hour deadline and threat of restriction creates panic. Legitimate banks allow you to call and resolve issues at your own pace." },
         { label: "Spoofed Link", detail: "The link text says 'Verify Your Identity' — hover over it to see it actually leads to a bit.ly shortened URL. Legitimate banks never use URL shorteners for security-related links because they hide the true destination." },
         { label: "Vague Device Details", detail: "Mentioning 'Lagos, Nigeria' is designed to alarm you. Real security alerts from Chase include more specific device and browser information." },
@@ -59,7 +59,7 @@ This is an automated message — please do not reply directly.`,
       type: "email",
       typeLabel: "Email",
       isPhishing: false,
-      from: "no-reply@amazon.com",
+      from: '<a href="no-reply@amazon.com" data-real="amazon.com">no-reply@amazon.com</a>',
       to: userEmail,
       subject: "Your Amazon order #112-4839201-7783921 has shipped",
       body: `Hello ${firstName},
@@ -80,7 +80,7 @@ If you need help, visit our Help page or contact us.
 Thanks for shopping with us,
 Amazon.com`,
       clues: [
-        { label: "Legitimate Domain", detail: "The sender is 'no-reply@amazon.com' — the genuine Amazon domain, not a look-alike with swapped characters." },
+        { label: "Legitimate Domain", detail: "The sender is 'no-reply@amazon.com' — the genuine Amazon domain. Hover over the From address to confirm it matches amazon.com." },
         { label: "Personalized Greeting", detail: "The email uses your actual name — and combined with other legitimacy signals, this is consistent with a real order notification." },
         { label: "Consistent Links", detail: "The link destination matches what's displayed — it goes to amazon.com, not a suspicious URL or IP address." },
         { label: "Specific Order Details", detail: "It references a real order number and specific item. Phishing emails are usually vague because they're sent to millions of people." },
@@ -128,8 +128,9 @@ Reply STOP to opt out`,
       type: "email",
       typeLabel: "Email",
       isPhishing: true,
-      from: "it-helpdesk@highlandcountyca.org.support-portal.net",
-      to: "all-staff@highlandcountyca.org",
+      from: '<a href="it-helpdesk@hcccao.org" data-real="support-portal.net">it-helpdesk@hcccao.org</a>',
+      fromNote: "Displayed as @hcccao.org but actually sent from support-portal.net",
+      to: "all-staff@hccao.org",
       subject: "Required: Annual Security Compliance — Password Update",
       body: `Hi ${firstName},
 
@@ -139,18 +140,18 @@ This applies to everyone — no exceptions. Your current password will expire at
 
 Please use our secure portal to update your password:
 
-<a href="https://highlandcountyca.org.support-portal.net/reset" data-real="https://secure-login.highlandcounty-portal.ru/reset">highlandcountyca.org.support-portal.net/reset</a>
+<a href="https://hccao.org.support-portal.net/reset" data-real="https://secure-login.highlandcounty-portal.ru/reset">hccao.org.support-portal.net/reset</a>
 
 If you have questions, reply to this email and we'll get back to you as soon as possible.
 
 Thanks for your cooperation,
 IT Help Desk
-Highland County Community Action Agency`,
+Highland County Community Action Organization`,
       clues: [
-        { label: "Subdomain Trick", detail: "The domain looks like 'highlandcountyca.org' at first glance, but the actual domain is 'support-portal.net'. The attacker placed the trusted name as a subdomain of their malicious domain — read right-to-left from the first single slash." },
+        { label: "Spoofed Sender Address", detail: "The From field displays 'it-helpdesk@hcccao.org' — which looks like your real IT department. But hover over the From address to see the actual sending domain is 'support-portal.net'. Attackers forge the display name to look internal while sending from an external server." },
+        { label: "Subdomain Trick in Link", detail: "The link shows 'hccao.org.support-portal.net' — which looks like your organization's domain at first glance. But the actual domain is 'support-portal.net'. The trusted name is just a subdomain of the attacker's domain. Read right-to-left from the first single slash." },
         { label: "End-of-Day Deadline", detail: "'By end of business today' with automatic lockout is classic social engineering urgency. Real IT password changes give reasonable timeframes, usually days or weeks." },
         { label: "Reply Trap", detail: "'Reply to this email' means you'd be communicating directly with the attacker, not your real IT department. Always verify through known channels." },
-        { label: "Sent to All Staff", detail: "Mass distribution increases the odds someone will click. Real IT password resets are typically handled through your actual portal, not mass emails with links." },
         { label: "Link Destination", detail: "Hover over the link — it resolves to a .ru (Russian) domain, not your organization's real server. An unexpected foreign country code in a URL is a major red flag." }
       ]
     },
@@ -159,8 +160,8 @@ Highland County Community Action Agency`,
       type: "email",
       typeLabel: "Email",
       isPhishing: true,
-      from: "noreply@rnicrоsoft.com",
-      fromNote: "Uses 'rn' instead of 'm' AND Cyrillic 'о' (U+043E) instead of Latin 'o'",
+      from: '<a href="noreply@microsoft.com" data-real="rnicrosoft.com">noreply@microsoft.com</a>',
+      fromNote: "Displayed as microsoft.com but actually sent from rnicrosoft.com — 'rn' instead of 'm'",
       to: userEmail,
       subject: "Action Required: Unusual Sign-In Activity on Your Microsoft Account",
       body: `Dear ${userName},
@@ -176,14 +177,14 @@ If this was you, you can safely ignore this message.
 
 If this wasn't you, your account may be compromised. Please review your recent activity and secure your account:
 
-<a href="https://account.rnicrоsoft.com/security" data-real="https://www.dropbox.com/scl/fi/8k3m9xvqw2/security-review.html?dl=1">Review recent activity</a>
+<a href="https://account.rnicrosoft.com/security" data-real="https://www.dropbox.com/scl/fi/8k3m9xvqw2/security-review.html?dl=1">Review recent activity</a>
 
 Microsoft Account Security
 This is a mandatory notification. Ref: MS-SEC-2026-4819`,
       clues: [
-        { label: "'rn' Looks Like 'm'", detail: "The sender domain is 'rnicrоsoft.com' — the letters 'rn' are used in place of 'm' in 'microsoft'. In many fonts, 'rn' is nearly indistinguishable from 'm'. This is one of the oldest and most effective text tricks in phishing." },
-        { label: "Cyrillic 'о' in Domain", detail: "On top of the rn/m swap, the 'o' in 'rnicrоsoft' is actually a Cyrillic 'о' (U+043E). This double-layer of deception makes it extremely hard to spot — even security-aware users can miss it." },
-        { label: "Your Real Email Displayed", detail: "Showing your actual email address in the body makes it feel targeted and real. Hover over the link — it points to a Dropbox file, not Microsoft's real security portal. Attackers use trusted cloud services to host phishing pages because the URLs look less suspicious." },
+        { label: "Spoofed Sender Address", detail: "The From field displays 'noreply@microsoft.com' — which looks perfectly legitimate. But hover over it to reveal the actual sending domain: 'rnicrosoft.com'. The letters 'rn' are used in place of 'm'. In many fonts, 'rn' is nearly indistinguishable from 'm'. You'd never catch this without hovering over the sender address." },
+        { label: "Mismatched Link Destination", detail: "Hover over the 'Review recent activity' link — it points to a Dropbox file, not Microsoft's real security portal at account.microsoft.com. Attackers use trusted cloud services to host phishing pages because the URLs look less suspicious." },
+        { label: "Your Real Email Displayed", detail: "Showing your actual email address in the body makes it feel targeted and real. But attackers who have your email can easily template it into mass phishing messages." },
         { label: "Scary Location (Moscow, Russia)", detail: "The foreign location is chosen to frighten you into clicking immediately. Real Microsoft security alerts let you review activity through the genuine account.microsoft.com portal." },
         { label: "Professional Formatting", detail: "The clean layout, reference number, and official-sounding language are designed to build trust. Sophistication doesn't equal legitimacy — always check the actual domain." }
       ]
@@ -216,7 +217,7 @@ Again, this is Karen at Buckeye Office Supply. Thanks so much, ${firstName}. Tal
       type: "voice",
       typeLabel: "Voice (Vishing)",
       isPhishing: true,
-      from: "+1 (614) 555-8832 — Caller ID: 'Microsоft Support'",
+      from: "+1 (614) 555-8832 — Caller ID: 'Microsoft Support'",
       body: `[Live call transcript]
 
 "Hello, am I speaking with ${userName}? Great. My name is Daniel and I'm calling from Microsoft Windows Technical Support. The reason for my call today is that our server has flagged your computer's IP address for critical security issues.
@@ -225,12 +226,12 @@ Your computer has been sending out error reports and our team has identified tha
 
 I'd like to help you fix this right now. Can you please go to your computer? I'll need you to press the Windows key and the letter R at the same time, then type 'eventvwr' and press Enter. Do you see some warnings and errors listed there in red and yellow? Those are the infections I'm talking about.
 
-To remove the virus, I'll need you to visit our secure support page at rnicrosоft-support.com and download our remote assistance tool. Once I have access, our technicians can clean your system. There is a one-time service fee of $299 for the cleanup."`,
+To remove the virus, I'll need you to call our priority support hotline at 1-888-329-4071 and provide the representative with your case number MS-TC-44821. They'll walk you through installing our remote assistance tool so our technicians can clean your system. There is a one-time service fee of $299 for the cleanup."`,
       clues: [
         { label: "Microsoft Doesn't Cold Call", detail: "Microsoft will never proactively call you about viruses or security issues. If you didn't initiate a support request, the call is a scam." },
         { label: "They Used Your Real Name", detail: "The caller used your name to build trust. Names are easily obtained from data breaches, social media, phone directories, or even your voicemail greeting." },
         { label: "Event Viewer Trick", detail: "Every Windows computer shows warnings and errors in Event Viewer — they're completely normal system logs. Scammers use this to 'prove' your computer is infected." },
-        { label: "Fake Domain (rn = m trick)", detail: "'rnicrosоft-support.com' uses 'rn' in place of 'm' and a Cyrillic 'о' for 'o' — the same tricks used in the spoofed email earlier. The real Microsoft support site is support.microsoft.com." },
+        { label: "Fake Hotline Number", detail: "The 'priority support hotline' and case number are completely fabricated. They connect you to the scam operation, not Microsoft. The real Microsoft support number is listed on support.microsoft.com." },
         { label: "Remote Access + Payment", detail: "The combination of remote access software and a payment demand is the hallmark of tech support scams. They want control of your computer and your money." }
       ]
     },
@@ -239,25 +240,27 @@ To remove the virus, I'll need you to visit our secure support page at rnicrosо
       type: "email",
       typeLabel: "Email",
       isPhishing: false,
-      from: "jthompson@highlandcountyca.org",
+      from: '<a href="jthompson@hccao.org" data-real="hccao.org">jthompson@hccao.org</a>',
       to: userEmail,
       subject: "Staff meeting rescheduled to 2:00 PM Thursday",
       body: `Hi ${firstName},
 
 Just a heads up — Thursday's staff meeting has been moved from 10:00 AM to 2:00 PM due to a scheduling conflict with the board room.
 
-Same location (Conference Room B), same agenda. I've updated the calendar invite so it should reflect on your end.
+Same location (Conference Room B), same agenda. I've updated the calendar invite so it should reflect on your end:
+
+<a href="https://calendar.google.com/calendar/event?eid=NjM4MjlhZDk3YzFkMTJlYjQ2" data-real="https://calendar.google.com/calendar/event?eid=NjM4MjlhZDk3YzFkMTJlYjQ2">View updated calendar invite</a>
 
 Let me know if the new time doesn't work for anyone.
 
 Thanks,
 Janet Thompson
 Program Coordinator
-Highland County Community Action Agency
+Highland County Community Action Organization
 (937) 393-3458`,
       clues: [
-        { label: "Internal Domain", detail: "The sender uses the real organizational email domain (@highlandcountyca.org) — not a lookalike subdomain or Cyrillic substitution." },
-        { label: "No Links or Attachments", detail: "The email doesn't ask you to click anything or download files — it's purely informational." },
+        { label: "Internal Domain", detail: "The sender uses the real organizational email domain (@hccao.org). Hover over the From address — the sending domain matches hccao.org, confirming it's legitimate." },
+        { label: "Legitimate Calendar Link", detail: "The link points to calendar.google.com — Google's real calendar service. Hover over it to confirm the destination matches what's displayed. This is consistent with a real calendar invite update." },
         { label: "Specific, Verifiable Details", detail: "References a specific room, time, and calendar update that you can verify independently." },
         { label: "Natural Tone", detail: "The writing sounds like a real person — casual, specific, and consistent with everyday workplace communication." },
         { label: "Known Contact Info", detail: "Includes a verifiable phone number and job title. You can confirm this person exists in your organization." }
@@ -270,12 +273,12 @@ Highland County Community Action Agency
       isPhishing: true,
       from: "+1 (937) 555-2100",
       body: `Highland County CAA: Hi ${firstName}, you have a pending direct deposit adjustment that requires your verification. Please confirm your banking details within 24hrs to avoid a delay in your next paycheck:
-<a href="https://hccaa-payroll.com/verify" data-real="https://tinyurl.com/y4kd83hr">hccaa-payroll.com/verify</a>
+<a href="https://hccao-payroll.com/verify" data-real="https://tinyurl.com/y4kd83hr">hccao-payroll.com/verify</a>
 
 — HR Department`,
       clues: [
         { label: "Fake Employer Text", detail: "Your employer's HR department would not ask you to verify banking details via text message. Payroll changes are handled through official internal systems or in-person." },
-        { label: "Lookalike Domain", detail: "The link text shows 'hccaa-payroll.com' but hover over it — it actually leads to a tinyurl.com shortened link. URL shorteners hide the true destination, and no legitimate HR department would use one for payroll verification." },
+        { label: "Lookalike Domain", detail: "The link text shows 'hccao-payroll.com' but hover over it — it actually leads to a tinyurl.com shortened link. URL shorteners hide the true destination, and no legitimate HR department would use one for payroll verification." },
         { label: "Banking Details Over Text", detail: "No legitimate employer asks for banking information via a link in a text message. This is a data harvesting attempt." },
         { label: "Local Area Code", detail: "The (937) area code makes it seem local and trustworthy, but phone numbers and area codes can be spoofed just as easily as caller ID." },
         { label: "Urgency Tied to Paycheck", detail: "Threatening a delay in your paycheck creates financial anxiety — exactly the kind of pressure that makes people click without thinking." }
@@ -303,7 +306,6 @@ function LinkRenderer({ text }) {
         if (match) {
           const [, displayUrl, realUrl, linkText] = match;
           const destination = realUrl || displayUrl;
-          const isSuspicious = realUrl && realUrl !== displayUrl;
           return (
             <span key={i} style={{ position: "relative", display: "inline" }}>
               <span
@@ -393,7 +395,7 @@ function MessageCard({ scenario, revealed }) {
           <div style={{ marginBottom: 14, fontSize: 13, color: "#64748b", lineHeight: 1.8 }}>
             <div style={{ display: "flex", flexWrap: "wrap", gap: 4, alignItems: "center" }}>
               <strong style={{ color: "#334155" }}>From:</strong>
-              <span>{scenario.from}</span>
+              <LinkRenderer text={scenario.from} />
               {revealed && scenario.fromNote && (
                 <span style={{
                   background: "#fef2f2",
@@ -444,7 +446,7 @@ function MessageCard({ scenario, revealed }) {
             background: "#fffbeb", border: "1px dashed #f59e0b",
             borderRadius: 8, fontSize: 12, color: "#92400e", textAlign: "center",
           }}>
-            💡 <strong>Hover over any blue links</strong> to reveal where they really lead
+            💡 <strong>Hover over any blue links — including email addresses — to inspect where they really lead</strong>
           </div>
         )}
       </div>
@@ -487,7 +489,6 @@ function PhishingTrainingDemo() {
           </p>
           <p style={{ color: "#64748b", fontSize: 13, margin: "0 0 36px 0" }}>
             Presented by <strong style={{ color: "#94a3b8" }}>Black Rabbit Consulting, LLC</strong>
-
           </p>
 
           <div style={{
@@ -524,7 +525,7 @@ function PhishingTrainingDemo() {
             <input
               type="email" value={userEmail}
               onChange={(e) => setUserEmail(e.target.value)}
-              placeholder="e.g. jsmith@highlandcountyca.org"
+              placeholder="e.g. jsmith@hccao.org"
               style={{
                 width: "100%", padding: "12px 16px",
                 background: "rgba(255,255,255,0.06)",
@@ -573,7 +574,7 @@ function PhishingTrainingDemo() {
           </h1>
           <p style={{ color: "#94a3b8", fontSize: 16, margin: "0 0 32px 0", lineHeight: 1.6 }}>
             The scenarios ahead will use <strong style={{ color: "#e2e8f0" }}>your name and email</strong> — just
-            like a real phishing attack would. Some use advanced tricks like Cyrillic character spoofing
+            like a real phishing attack would. Some use advanced tricks like domain spoofing
             and text substitution that are extremely hard to spot.
           </p>
           <div style={{ display: "flex", gap: 16, justifyContent: "center", marginBottom: 32, flexWrap: "wrap" }}>
@@ -641,6 +642,7 @@ function PhishingTrainingDemo() {
           {scenarios.map((s) => {
             const userAnswer = answers[s.id];
             const correct = userAnswer === s.isPhishing;
+            const summaryLabel = s.type === "email" ? s.subject : s.typeLabel + " from " + s.from.replace(/<[^>]*>/g, "").split("—")[0].trim();
             return (
               <div key={s.id} style={{
                 background: "rgba(255,255,255,0.03)",
@@ -652,7 +654,7 @@ function PhishingTrainingDemo() {
                 <span style={{ fontSize: 18 }}>{typeColors[s.type].icon}</span>
                 <div style={{ flex: 1, minWidth: 0 }}>
                   <div style={{ color: "#e2e8f0", fontSize: 14, fontWeight: 600, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
-                    {s.type === "email" ? s.subject : s.typeLabel + " from " + s.from.split("—")[0].trim()}
+                    {summaryLabel}
                   </div>
                   <div style={{ color: "#64748b", fontSize: 12 }}>
                     {s.isPhishing ? "Phishing" : "Legitimate"} — You said: {userAnswer ? "Phishing" : "Not Phishing"}
@@ -669,13 +671,16 @@ function PhishingTrainingDemo() {
             <h3 style={{ color: "#fca5a5", margin: "0 0 12px 0", fontSize: 17 }}>🔍 Advanced Tricks Used in This Training</h3>
             <div style={{ color: "#cbd5e1", fontSize: 13, lineHeight: 1.8 }}>
               <p style={{ margin: "0 0 10px 0" }}>
-                <strong style={{ color: "#f8fafc" }}>Cyrillic character spoofing:</strong> Some emails used characters from the Cyrillic alphabet (like 'е' and 'о') that look identical to Latin letters but register as completely different domains. This is called a <em>homograph attack</em>.
+                <strong style={{ color: "#f8fafc" }}>Text substitution ('rn' → 'm'):</strong> The letters 'r' and 'n' placed together look like 'm' in many fonts. 'rnicrosoft.com' reads as 'microsoft.com' at a glance.
               </p>
               <p style={{ margin: "0 0 10px 0" }}>
-                <strong style={{ color: "#f8fafc" }}>Text substitution ('rn' → 'm'):</strong> The letters 'r' and 'n' placed together look like 'm' in many fonts. 'rnicrоsoft.com' reads as 'microsoft.com' at a glance.
+                <strong style={{ color: "#f8fafc" }}>Foreign domain tricks:</strong> Unexpected country-code domains like .jp or .ru in sender addresses are a major red flag when the organization they claim to be is based in another country.
+              </p>
+              <p style={{ margin: "0 0 10px 0" }}>
+                <strong style={{ color: "#f8fafc" }}>Sender address spoofing:</strong> The displayed 'From' address can be forged to show an internal address while actually sending from an external domain. Always hover over sender addresses to inspect the real domain.
               </p>
               <p style={{ margin: 0 }}>
-                <strong style={{ color: "#f8fafc" }}>Subdomain deception:</strong> Attackers place a trusted name as a subdomain (e.g., 'highlandcountyca.org.evil-site.net'). The real domain is always the last part before the first single slash.
+                <strong style={{ color: "#f8fafc" }}>Subdomain deception:</strong> Attackers place a trusted name as a subdomain (e.g., 'hccao.org.evil-site.net'). The real domain is always the last part before the first single slash.
               </p>
             </div>
           </div>
@@ -687,10 +692,10 @@ function PhishingTrainingDemo() {
             <h3 style={{ color: "#93c5fd", margin: "0 0 12px 0", fontSize: 17 }}>🔑 Key Takeaways</h3>
             <div style={{ color: "#cbd5e1", fontSize: 13, lineHeight: 1.8 }}>
               <p style={{ margin: "0 0 10px 0" }}>
-                <strong style={{ color: "#f8fafc" }}>Always hover before you click.</strong> Phishing links often display one URL but lead somewhere completely different.
+                <strong style={{ color: "#f8fafc" }}>Always hover before you click.</strong> Inspect both links AND sender email addresses. The displayed text may not match the real destination.
               </p>
               <p style={{ margin: "0 0 10px 0" }}>
-                <strong style={{ color: "#f8fafc" }}>Inspect domains character by character.</strong> Cyrillic spoofing and 'rn/m' tricks are nearly invisible. When in doubt, type the URL manually.
+                <strong style={{ color: "#f8fafc" }}>Inspect domains character by character.</strong> 'rn/m' tricks and foreign domain codes are nearly invisible. When in doubt, type the URL manually.
               </p>
               <p style={{ margin: "0 0 10px 0" }}>
                 <strong style={{ color: "#f8fafc" }}>Personalization doesn't mean it's safe.</strong> Attackers use your name, email, and employer from public sources and data breaches.

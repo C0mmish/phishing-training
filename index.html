@@ -29,7 +29,7 @@ function getScenarios(userName, userEmail) {
       type: "email",
       typeLabel: "Email",
       isPhishing: true,
-      from: '<a href="security-alert@chase.com" data-real="chasebankalertsender.jp">security-alert@chase.com</a>',
+      from: '<a href="security-alert@chase.com" data-real="security@chasebankalertsender.jp">security-alert@chase.com</a>',
       fromNote: "Displayed as chase.com but actually sent from chasebankalertsender.jp",
       to: userEmail,
       subject: "⚠️ Unusual Sign-In Activity on Your Account",
@@ -59,7 +59,7 @@ This is an automated message — please do not reply directly.`,
       type: "email",
       typeLabel: "Email",
       isPhishing: false,
-      from: '<a href="no-reply@amazon.com" data-real="amazon.com">no-reply@amazon.com</a>',
+      from: '<a href="no-reply@amazon.com" data-real="no-reply@amazon.com">no-reply@amazon.com</a>',
       to: userEmail,
       subject: "Your Amazon order #112-4839201-7783921 has shipped",
       body: `Hello ${firstName},
@@ -128,8 +128,8 @@ Reply STOP to opt out`,
       type: "email",
       typeLabel: "Email",
       isPhishing: true,
-      from: '<a href="it-helpdesk@hcccao.org" data-real="support-portal.net">it-helpdesk@hcccao.org</a>',
-      fromNote: "Displayed as @hcccao.org but actually sent from support-portal.net",
+      from: '<a href="it-helpdesk@hccao.org" data-real="admin@support-portal.net">it-helpdesk@hccao.org</a>',
+      fromNote: "Displayed as @hccao.org but actually sent from support-portal.net",
       to: "all-staff@hccao.org",
       subject: "Required: Annual Security Compliance — Password Update",
       body: `Hi ${firstName},
@@ -148,7 +148,7 @@ Thanks for your cooperation,
 IT Help Desk
 Highland County Community Action Organization`,
       clues: [
-        { label: "Spoofed Sender Address", detail: "The From field displays 'it-helpdesk@hcccao.org' — which looks like your real IT department. But hover over the From address to see the actual sending domain is 'support-portal.net'. Attackers forge the display name to look internal while sending from an external server." },
+        { label: "Spoofed Sender Address", detail: "The From field displays 'it-helpdesk@hccao.org' — which looks like your real IT department. But hover over the From address to see the actual sending domain is 'support-portal.net'. Attackers forge the display name to look internal while sending from an external server." },
         { label: "Subdomain Trick in Link", detail: "The link shows 'hccao.org.support-portal.net' — which looks like your organization's domain at first glance. But the actual domain is 'support-portal.net'. The trusted name is just a subdomain of the attacker's domain. Read right-to-left from the first single slash." },
         { label: "End-of-Day Deadline", detail: "'By end of business today' with automatic lockout is classic social engineering urgency. Real IT password changes give reasonable timeframes, usually days or weeks." },
         { label: "Reply Trap", detail: "'Reply to this email' means you'd be communicating directly with the attacker, not your real IT department. Always verify through known channels." },
@@ -160,7 +160,7 @@ Highland County Community Action Organization`,
       type: "email",
       typeLabel: "Email",
       isPhishing: true,
-      from: '<a href="noreply@microsoft.com" data-real="rnicrosoft.com">noreply@microsoft.com</a>',
+      from: '<a href="noreply@microsoft.com" data-real="noreply@rnicrosoft.com">noreply@microsoft.com</a>',
       fromNote: "Displayed as microsoft.com but actually sent from rnicrosoft.com — 'rn' instead of 'm'",
       to: userEmail,
       subject: "Action Required: Unusual Sign-In Activity on Your Microsoft Account",
@@ -240,7 +240,7 @@ To remove the virus, I'll need you to call our priority support hotline at 1-888
       type: "email",
       typeLabel: "Email",
       isPhishing: false,
-      from: '<a href="jthompson@hccao.org" data-real="hccao.org">jthompson@hccao.org</a>',
+      from: '<a href="ballering@hccao.org" data-real="ballering@hccao.org">ballering@hccao.org</a>',
       to: userEmail,
       subject: "Staff meeting rescheduled to 2:00 PM Thursday",
       body: `Hi ${firstName},
@@ -254,8 +254,7 @@ Same location (Conference Room B), same agenda. I've updated the calendar invite
 Let me know if the new time doesn't work for anyone.
 
 Thanks,
-Janet Thompson
-Program Coordinator
+Beth Allering
 Highland County Community Action Organization
 (937) 393-3458`,
       clues: [
@@ -272,7 +271,7 @@ Highland County Community Action Organization
       typeLabel: "SMS (Smishing)",
       isPhishing: true,
       from: "+1 (937) 555-2100",
-      body: `Highland County CAA: Hi ${firstName}, you have a pending direct deposit adjustment that requires your verification. Please confirm your banking details within 24hrs to avoid a delay in your next paycheck:
+      body: `Highland County CAO: Hi ${firstName}, you have a pending direct deposit adjustment that requires your verification. Please confirm your banking details within 24hrs to avoid a delay in your next paycheck:
 <a href="https://hccao-payroll.com/verify" data-real="https://tinyurl.com/y4kd83hr">hccao-payroll.com/verify</a>
 
 — HR Department`,

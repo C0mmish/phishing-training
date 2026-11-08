@@ -1,439 +1,74 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Can I Get WIC? | Clinton County WIC</title>
-<style>
-  :root {
-    --blue: #1d4f91;
-    --blue-dark: #143a6b;
-    --green: #1e7b3c;
-    --green-bg: #e8f5ec;
-    --amber-bg: #fff6e0;
-    --amber: #8a5a00;
-    --gray: #f3f5f8;
-    --text: #1a1a1a;
-    --border: #c9d1dc;
-  }
-  * { box-sizing: border-box; }
-  body {
-    margin: 0;
-    font-family: Arial, Helvetica, sans-serif;
-    font-size: 20px;
-    line-height: 1.5;
-    color: var(--text);
-    background: var(--gray);
-  }
-  .wrap { max-width: 640px; margin: 0 auto; padding: 16px; }
-  header { background: var(--blue); color: #fff; padding: 20px 16px; text-align: center; }
-  header h1 { margin: 0; font-size: 28px; }
-  header p { margin: 4px 0 0; font-size: 18px; }
-  .card {
-    background: #fff;
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    padding: 24px 20px;
-    margin-top: 16px;
-  }
-  .step { font-size: 16px; color: #555; margin: 0 0 8px; }
-  h2 { font-size: 26px; margin: 0 0 12px; line-height: 1.3; }
-  h2:focus { outline: none; }
-  p { margin: 0 0 14px; }
-  .hint { font-size: 18px; color: #444; }
-  .btns { display: flex; flex-direction: column; gap: 12px; margin-top: 18px; }
-  button {
-    font: inherit;
-    font-size: 22px;
-    min-height: 60px;
-    padding: 12px 18px;
-    border-radius: 10px;
-    border: 2px solid var(--blue);
-    background: #fff;
-    color: var(--blue);
-    cursor: pointer;
-    text-align: left;
-  }
-  button:hover { background: #eef3fb; }
-  button:focus-visible { outline: 4px solid #f2b705; outline-offset: 2px; }
-  button.primary { background: var(--blue); color: #fff; text-align: center; }
-  button.primary:hover { background: var(--blue-dark); }
-  button.link {
-    border: none; background: none; min-height: auto; padding: 8px 0;
-    font-size: 18px; text-decoration: underline; color: var(--blue);
-  }
-  .check {
-    display: flex; align-items: center; gap: 14px;
-    border: 2px solid var(--border); border-radius: 10px;
-    padding: 14px 16px; font-size: 21px; cursor: pointer; background: #fff;
-  }
-  .check input { width: 30px; height: 30px; flex: none; accent-color: var(--blue); }
-  .check:has(input:checked) { border-color: var(--blue); background: #eef3fb; }
-  .counter { display: flex; align-items: center; justify-content: center; gap: 20px; margin: 18px 0; }
-  .counter button { width: 64px; text-align: center; font-size: 32px; padding: 0; }
-  .counter output { font-size: 44px; font-weight: bold; min-width: 70px; text-align: center; }
-  table { width: 100%; border-collapse: collapse; margin: 8px 0 16px; font-size: 20px; }
-  th, td { padding: 10px 12px; border-bottom: 1px solid var(--border); text-align: left; }
-  td.amt { text-align: right; font-weight: bold; }
-  .result-yes { background: var(--green-bg); border-color: var(--green); }
-  .result-yes h2 { color: var(--green); }
-  .result-maybe { background: var(--amber-bg); border-color: var(--amber); }
-  .result-maybe h2 { color: var(--amber); }
-  .call {
-    display: block; text-align: center; font-size: 26px; font-weight: bold;
-    background: var(--green); color: #fff; text-decoration: none;
-    padding: 16px; border-radius: 10px; margin: 16px 0;
-  }
-  .call:focus-visible { outline: 4px solid #f2b705; outline-offset: 2px; }
-  ul { padding-left: 24px; margin: 0 0 14px; }
-  li { margin-bottom: 6px; }
-  .nav { display: flex; justify-content: space-between; margin-top: 12px; }
-  fieldset.freq { border: none; padding: 0; margin: 16px 0 0; display: flex; flex-direction: column; gap: 10px; }
-  fieldset.freq legend { margin-bottom: 10px; padding: 0; }
-  .amt-label { display: block; margin: 22px 0 8px; }
-  .amt-wrap {
-    display: flex; align-items: center; gap: 8px;
-    border: 2px solid var(--blue); border-radius: 10px; padding: 6px 14px; background: #fff;
-    font-size: 32px; font-weight: bold;
-  }
-  .amt-wrap:focus-within { outline: 4px solid #f2b705; outline-offset: 2px; }
-  .amt-wrap input { border: none; outline: none; font: inherit; width: 100%; min-width: 0; padding: 6px 0; }
-  .income-result { margin-top: 16px; }
-  .income-result.ok, .income-result.over {
-    display: flex; gap: 14px; align-items: center;
-    padding: 16px; border-radius: 10px; border: 3px solid; font-size: 20px;
-  }
-  .income-result.ok { background: #d9f2e1; border-color: var(--green); color: #0f4d24; }
-  .income-result.over { background: #fde2e2; border-color: #b00020; color: #7a0016; }
-  .income-result .icon { font-size: 36px; line-height: 1; }
-  details.chart { margin-top: 24px; border-top: 1px solid var(--border); padding-top: 14px; }
-  details.chart summary { cursor: pointer; color: var(--blue); text-decoration: underline; font-size: 20px; padding: 6px 0; }
-  details.chart summary:focus-visible { outline: 4px solid #f2b705; outline-offset: 2px; }
-  footer { font-size: 15px; color: #555; padding: 16px 4px 32px; }
-  .error { color: #b00020; font-weight: bold; }
-</style>
-</head>
-<body>
-<header>
-  <h1>Can I Get WIC?</h1>
-  <p>Clinton County WIC &middot; Quick check</p>
-</header>
+type: "email",
+typeLabel: "Email",
+isPhishing: true,
+      from: '<a href="security-alert@chase.com" data-real="chasebankalertsender.jp">security-alert@chase.com</a>',
+      from: '<a href="security-alert@chase.com" data-real="security@chasebankalertsender.jp">security-alert@chase.com</a>',
+fromNote: "Displayed as chase.com but actually sent from chasebankalertsender.jp",
+to: userEmail,
+subject: "⚠️ Unusual Sign-In Activity on Your Account",
+@@ -59,7 +59,7 @@
+type: "email",
+typeLabel: "Email",
+isPhishing: false,
+      from: '<a href="no-reply@amazon.com" data-real="amazon.com">no-reply@amazon.com</a>',
+      from: '<a href="no-reply@amazon.com" data-real="no-reply@amazon.com">no-reply@amazon.com</a>',
+to: userEmail,
+subject: "Your Amazon order #112-4839201-7783921 has shipped",
+body: `Hello ${firstName},
+@@ -128,8 +128,8 @@
+type: "email",
+typeLabel: "Email",
+isPhishing: true,
+      from: '<a href="it-helpdesk@hcccao.org" data-real="support-portal.net">it-helpdesk@hcccao.org</a>',
+      fromNote: "Displayed as @hcccao.org but actually sent from support-portal.net",
+      from: '<a href="it-helpdesk@hccao.org" data-real="admin@support-portal.net">it-helpdesk@hccao.org</a>',
+      fromNote: "Displayed as @hccao.org but actually sent from support-portal.net",
+to: "all-staff@hccao.org",
+subject: "Required: Annual Security Compliance — Password Update",
+body: `Hi ${firstName},
+@@ -148,7 +148,7 @@
+IT Help Desk
+Highland County Community Action Organization`,
+clues: [
+        { label: "Spoofed Sender Address", detail: "The From field displays 'it-helpdesk@hcccao.org' — which looks like your real IT department. But hover over the From address to see the actual sending domain is 'support-portal.net'. Attackers forge the display name to look internal while sending from an external server." },
+        { label: "Spoofed Sender Address", detail: "The From field displays 'it-helpdesk@hccao.org' — which looks like your real IT department. But hover over the From address to see the actual sending domain is 'support-portal.net'. Attackers forge the display name to look internal while sending from an external server." },
+{ label: "Subdomain Trick in Link", detail: "The link shows 'hccao.org.support-portal.net' — which looks like your organization's domain at first glance. But the actual domain is 'support-portal.net'. The trusted name is just a subdomain of the attacker's domain. Read right-to-left from the first single slash." },
+{ label: "End-of-Day Deadline", detail: "'By end of business today' with automatic lockout is classic social engineering urgency. Real IT password changes give reasonable timeframes, usually days or weeks." },
+{ label: "Reply Trap", detail: "'Reply to this email' means you'd be communicating directly with the attacker, not your real IT department. Always verify through known channels." },
+@@ -160,7 +160,7 @@
+type: "email",
+typeLabel: "Email",
+isPhishing: true,
+      from: '<a href="noreply@microsoft.com" data-real="rnicrosoft.com">noreply@microsoft.com</a>',
+      from: '<a href="noreply@microsoft.com" data-real="noreply@rnicrosoft.com">noreply@microsoft.com</a>',
+fromNote: "Displayed as microsoft.com but actually sent from rnicrosoft.com — 'rn' instead of 'm'",
+to: userEmail,
+subject: "Action Required: Unusual Sign-In Activity on Your Microsoft Account",
+@@ -240,7 +240,7 @@
+type: "email",
+typeLabel: "Email",
+isPhishing: false,
+      from: '<a href="jthompson@hccao.org" data-real="hccao.org">jthompson@hccao.org</a>',
+      from: '<a href="ballering@hccao.org" data-real="ballering@hccao.org">ballering@hccao.org</a>',
+to: userEmail,
+subject: "Staff meeting rescheduled to 2:00 PM Thursday",
+body: `Hi ${firstName},
+@@ -254,8 +254,7 @@
+Let me know if the new time doesn't work for anyone.
 
-<main class="wrap">
-  <div id="app" class="card" aria-live="polite"></div>
-  <div class="nav">
-    <button type="button" class="link" id="backBtn" hidden>&larr; Back</button>
-    <button type="button" class="link" id="restartBtn" hidden>Start over</button>
-  </div>
-  <footer>
-    This is a quick check only. It does not sign you up for WIC. WIC staff make the final decision at your visit.
-    Income amounts from the Ohio Department of Health (revised 7/26).
-    WIC is an equal opportunity provider.
-  </footer>
-</main>
+Thanks,
+Janet Thompson
+Program Coordinator
+Beth Allering
+Highland County Community Action Organization
+(937) 393-3458`,
+clues: [
+@@ -272,7 +271,7 @@
+typeLabel: "SMS (Smishing)",
+isPhishing: true,
+from: "+1 (937) 555-2100",
+      body: `Highland County CAA: Hi ${firstName}, you have a pending direct deposit adjustment that requires your verification. Please confirm your banking details within 24hrs to avoid a delay in your next paycheck:
+      body: `Highland County CAO: Hi ${firstName}, you have a pending direct deposit adjustment that requires your verification. Please confirm your banking details within 24hrs to avoid a delay in your next paycheck:
+<a href="https://hccao-payroll.com/verify" data-real="https://tinyurl.com/y4kd83hr">hccao-payroll.com/verify</a>
 
-<script>
-/* ===== Settings: update these when info changes ===== */
-const CLINIC = {
-  name: "Clinton County WIC",
-  address: "111 S. Nelson Ave., Wilmington, OH 45177",
-  phone: "937-382-7221",          // VERIFY: confirm the direct WIC line with the clinic
-  phoneLink: "tel:+19373827221"
-};
-const STATE_HELP = { phone: "1-800-755-4769", phoneLink: "tel:+18007554769" };
-
-/* Ohio WIC income limits (185% of poverty). ODH chart, revised 7/26.
-   [annual, monthly, twice a month, every 2 weeks, weekly] */
-const LIMITS = {
-  1: [29526, 2461, 1231, 1136, 568],
-  2: [40034, 3337, 1669, 1540, 770],
-  3: [50542, 4212, 2106, 1944, 972],
-  4: [61050, 5088, 2544, 2349, 1175],
-  5: [71558, 5964, 2982, 2753, 1377],
-  6: [82066, 6839, 3420, 3157, 1579],
-  7: [92574, 7715, 3858, 3561, 1781],
-  8: [103082, 8591, 4296, 3965, 1983]
-};
-const ADD_PER_PERSON_YEAR = 10508; // each person over 8
-
-function limitsFor(n) {
-  if (LIMITS[n]) return LIMITS[n];
-  const yr = LIMITS[8][0] + ADD_PER_PERSON_YEAR * (n - 8);
-  return [yr, Math.ceil(yr / 12), Math.ceil(yr / 24), Math.ceil(yr / 26), Math.ceil(yr / 52)];
-}
-const money = n => "$" + n.toLocaleString("en-US");
-
-/* ===== State ===== */
-const state = { who: [], benefits: null, size: 2, history: [] };
-const app = document.getElementById("app");
-const backBtn = document.getElementById("backBtn");
-const restartBtn = document.getElementById("restartBtn");
-
-function go(screen, push = true) {
-  if (push && state.current) state.history.push(state.current);
-  state.current = screen;
-  app.className = "card";
-  app.innerHTML = "";
-  SCREENS[screen]();
-  backBtn.hidden = state.history.length === 0;
-  restartBtn.hidden = screen === "county";
-  const h = app.querySelector("h2");
-  if (h) { h.setAttribute("tabindex", "-1"); h.focus(); }
-  if (window.parent === window) window.scrollTo(0, 0);
-  else if (state.started) window.parent.postMessage({ ccwicScrollTop: true }, "*");
-  state.started = true;
-}
-
-backBtn.onclick = () => { if (state.history.length) go(state.history.pop(), false); };
-restartBtn.onclick = () => {
-  state.who = []; state.benefits = null; state.size = 2; state.history = []; state.current = null;
-  state.freq = undefined; state.amount = undefined;
-  go("county");
-};
-
-function html(str) { app.insertAdjacentHTML("beforeend", str); }
-function btn(label, onClick, cls = "") {
-  const b = document.createElement("button");
-  b.type = "button"; b.textContent = label; if (cls) b.className = cls;
-  b.onclick = onClick;
-  return b;
-}
-function btnRow(...buttons) {
-  const d = document.createElement("div"); d.className = "btns";
-  buttons.forEach(b => d.appendChild(b)); app.appendChild(d);
-}
-function callBlock(c = CLINIC) {
-  return `<a class="call" href="${c.phoneLink}">Call ${c.phone}</a>`;
-}
-
-/* ===== Screens ===== */
-const SCREENS = {
-  county() {
-    html(`<p class="step">Question 1 of 5</p>
-      <h2>Do you live in Clinton County?</h2>
-      <p class="hint">This includes Wilmington, Blanchester, Sabina, New Vienna, Clarksville, Martinsville, Midland, and Port William.</p>`);
-    btnRow(btn("Yes", () => go("who")), btn("No", () => go("otherCounty")));
-  },
-
-  otherCounty() {
-    app.classList.add("result-maybe");
-    html(`<h2>WIC is in every Ohio county</h2>
-      <p>You can still get WIC. You just need to go to the WIC office in the county where you live.</p>
-      <p>Call the Help Me Grow line. They will tell you where your WIC office is.</p>
-      ${callBlock(STATE_HELP)}`);
-  },
-
-  who() {
-    html(`<p class="step">Question 2 of 5</p>
-      <h2>Who is the WIC for?</h2>
-      <p class="hint">Check all that are true.</p>`);
-    const opts = [
-      ["pregnant", "I am pregnant"],
-      ["postpartum", "I had a baby in the last 6 months"],
-      ["breastfeeding", "I am breastfeeding a baby under 1 year old"],
-      ["infant", "A baby under 1 year old"],
-      ["child", "A child age 1, 2, 3, or 4"]
-    ];
-    const box = document.createElement("div"); box.className = "btns";
-    opts.forEach(([val, label]) => {
-      const l = document.createElement("label"); l.className = "check";
-      l.innerHTML = `<input type="checkbox" value="${val}" ${state.who.includes(val) ? "checked" : ""}> ${label}`;
-      box.appendChild(l);
-    });
-    app.appendChild(box);
-    const err = document.createElement("p"); err.className = "error"; err.setAttribute("role", "alert");
-    app.appendChild(err);
-    btnRow(
-      btn("Next", () => {
-        state.who = [...app.querySelectorAll("input:checked")].map(i => i.value);
-        if (!state.who.length) { err.textContent = "Please check at least one box, or pick “None of these.”"; return; }
-        go("benefits");
-      }, "primary"),
-      btn("None of these", () => { state.who = []; go("notCategory"); })
-    );
-  },
-
-  notCategory() {
-    app.classList.add("result-maybe");
-    html(`<h2>WIC may not be the right fit</h2>
-      <p>WIC is for:</p>
-      <ul>
-        <li>Women who are pregnant</li>
-        <li>Women who just had a baby or are breastfeeding</li>
-        <li>Babies</li>
-        <li>Children under age 5</li>
-      </ul>
-      <p>If this changes, like if you get pregnant, please check again.</p>
-      <p>Have questions? Call us.</p>
-      ${callBlock()}`);
-  },
-
-  benefits() {
-    html(`<p class="step">Question 3 of 5</p>
-      <h2>Do you or your family get any of these?</h2>
-      <ul>
-        <li>Medicaid</li>
-        <li>SNAP (food stamps)</li>
-        <li>Ohio Works First (OWF) cash help</li>
-      </ul>`);
-    btnRow(
-      btn("Yes", () => { state.benefits = true; go("size"); }),
-      btn("No", () => { state.benefits = false; go("size"); }),
-      btn("I'm not sure", () => { state.benefits = false; go("size"); })
-    );
-  },
-
-  size() {
-    const pregnant = state.who.includes("pregnant");
-    html(`<p class="step">Question 4 of 5</p>
-      <h2>How many people live in your home?</h2>
-      <p class="hint">Count yourself and everyone who lives with you and shares money.</p>
-      ${pregnant ? `<p class="hint"><strong>If you are pregnant:</strong> count each baby you are carrying. (Twins count as 2.)</p>` : ""}`);
-    const c = document.createElement("div"); c.className = "counter";
-    const out = document.createElement("output"); out.textContent = state.size;
-    out.setAttribute("aria-live", "polite");
-    const minus = btn("−", () => { if (state.size > 1) out.textContent = --state.size; });
-    minus.setAttribute("aria-label", "One less person");
-    const plus = btn("+", () => { if (state.size < 20) out.textContent = ++state.size; });
-    plus.setAttribute("aria-label", "One more person");
-    c.append(minus, out, plus);
-    app.appendChild(c);
-    btnRow(btn("Next", () => go(state.benefits ? "resultYes" : "income"), "primary"));
-  },
-
-  income() {
-    const L = limitsFor(state.size);
-    const PERIODS = [
-      ["week", "Each week", 4],
-      ["2weeks", "Every 2 weeks", 3],
-      ["twice", "Twice a month", 2],
-      ["month", "Each month", 1],
-      ["year", "Each year", 0]
-    ];
-    html(`<p class="step">Question 5 of 5</p>
-      <h2>How much money does your home make?</h2>
-      <p class="hint">Add up money <strong>before taxes</strong> for everyone in your home.</p>
-      <fieldset class="freq">
-        <legend><strong>Step 1:</strong> How often do you get this money?</legend>
-        ${PERIODS.map(([v, label], i) => `<label class="check"><input type="radio" name="freq" value="${i}" ${state.freq === i ? "checked" : ""}> ${label}</label>`).join("")}
-      </fieldset>
-      <label class="amt-label" for="amt"><strong>Step 2:</strong> Type the amount</label>
-      <div class="amt-wrap"><span aria-hidden="true">$</span>
-        <input id="amt" type="text" inputmode="decimal" autocomplete="off" placeholder="0" value="${state.amount ?? ""}">
-      </div>
-      <div id="incomeResult" class="income-result" role="status" aria-live="polite"></div>`);
-
-    const resultBox = app.querySelector("#incomeResult");
-    const amtInput = app.querySelector("#amt");
-    const nextArea = document.createElement("div");
-
-    function check() {
-      const fi = app.querySelector('input[name="freq"]:checked');
-      const raw = amtInput.value.replace(/[$,\s]/g, "");
-      state.amount = amtInput.value;
-      nextArea.innerHTML = "";
-      resultBox.className = "income-result";
-      resultBox.innerHTML = "";
-      if (!fi || raw === "" || isNaN(Number(raw))) return;
-      state.freq = Number(fi.value);
-      const [, label, idx] = PERIODS[state.freq];
-      const limit = L[idx];
-      const amt = Number(raw);
-      if (amt <= limit) {
-        resultBox.classList.add("ok");
-        resultBox.innerHTML = `<span class="icon" aria-hidden="true">&#10004;</span>
-          <div><strong>Yes! Your income fits WIC.</strong><br>
-          You: ${money(Math.round(amt))} &nbsp;&middot;&nbsp; Limit: ${money(limit)} ${label.toLowerCase()}</div>`;
-        nextArea.appendChild(btn("Next", () => go("resultYes"), "primary"));
-      } else {
-        resultBox.classList.add("over");
-        resultBox.innerHTML = `<span class="icon" aria-hidden="true">&#10006;</span>
-          <div><strong>Your income is over the WIC limit.</strong><br>
-          You: ${money(Math.round(amt))} &nbsp;&middot;&nbsp; Limit: ${money(limit)} ${label.toLowerCase()}</div>`;
-        nextArea.appendChild(btn("Next", () => go("resultOver"), "primary"));
-      }
-    }
-    amtInput.addEventListener("input", check);
-    app.querySelectorAll('input[name="freq"]').forEach(r => r.addEventListener("change", check));
-
-    const nb = document.createElement("div"); nb.className = "btns";
-    nb.appendChild(nextArea);
-    app.appendChild(nb);
-    btnRow(btn("I don't know my income", () => go("resultUnsure")));
-    check();
-
-    html(`<details class="chart">
-      <summary>Or look at the income chart</summary>
-      <p><strong>Income limits for ${state.size} ${state.size === 1 ? "person" : "people"}:</strong></p>
-      <table>
-        <tr><th scope="row">Each week</th><td class="amt">${money(L[4])}</td></tr>
-        <tr><th scope="row">Every 2 weeks</th><td class="amt">${money(L[3])}</td></tr>
-        <tr><th scope="row">Twice a month</th><td class="amt">${money(L[2])}</td></tr>
-        <tr><th scope="row">Each month</th><td class="amt">${money(L[1])}</td></tr>
-        <tr><th scope="row">Each year</th><td class="amt">${money(L[0])}</td></tr>
-      </table>
-      <p>Is your income the same or less than your line?</p>
-      <div class="btns">
-        <button type="button" data-go="resultYes">Yes, it is the same or less</button>
-        <button type="button" data-go="resultOver">No, it is more</button>
-      </div>
-    </details>`);
-    app.querySelectorAll("[data-go]").forEach(b => b.onclick = () => go(b.dataset.go));
-  },
-
-  resultYes() {
-    app.classList.add("result-yes");
-    html(`<h2>Good news! You may be able to get WIC.</h2>
-      <p>The next step is to call and make a visit.</p>
-      ${callBlock()}
-      <p><strong>Where:</strong> ${CLINIC.address}</p>
-      ${bringList()}
-      <p class="hint">At your visit, WIC staff will do a short health check. They will tell you if you qualify.</p>`);
-  },
-
-  resultUnsure() {
-    app.classList.add("result-maybe");
-    html(`<h2>That's OK. We can help you figure it out.</h2>
-      <p>Many families who are not sure do qualify. Call us and we will go over it with you.</p>
-      ${callBlock()}
-      <p><strong>Where:</strong> ${CLINIC.address}</p>
-      ${bringList()}`);
-  },
-
-  resultOver() {
-    app.classList.add("result-maybe");
-    html(`<h2>Your income may be too high for WIC.</h2>
-      <p>But please still call us. Some things can change the answer, like:</p>
-      <ul>
-        <li>Getting Medicaid, SNAP, or OWF</li>
-        <li>Income that changed lately, like a lost job</li>
-        <li>A household count that is different than you thought</li>
-      </ul>
-      ${callBlock()}`);
-  }
-};
-
-function bringList() {
-  return `<p><strong>Bring to your visit:</strong></p>
-    <ul>
-      <li>Each person who wants WIC</li>
-      <li>Photo ID</li>
-      <li>Proof of where you live, like a bill or lease</li>
-      <li>Proof of income, like pay stubs${state.benefits ? ", or your Medicaid, SNAP, or OWF paper" : ""}</li>
-    </ul>`;
-}
-
-go("county");
-
-/* When embedded in an iframe, tell the parent page how tall we are */
-(function () {
-  if (window.parent === window) return;
-  const send = () => window.parent.postMessage(
-    { ccwicHeight: Math.ceil(document.documentElement.scrollHeight) }, "*");
-  new ResizeObserver(send).observe(document.body);
-  window.addEventListener("load", send);
-  send();
-})();
-</script>
-</body>
-</html>
+— HR Department`,
